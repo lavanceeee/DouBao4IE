@@ -1,0 +1,5 @@
+List of known entity types: $etl.
+
+Given a sentence: "$sentence"
+
+Which entities may be included in a given sentence, please answer in the form (entity type, entity content):

@@ -1,0 +1,11 @@
+Suppose you are an entity-relationship triple extraction model. I'll give you list of head entity types: subject_types, list of tail entity types: object_types, list of relations: relations. Give you a sentence, please extract the subject and object in the sentence based on these three lists, and form a triplet in the form of (subject, relation, object).
+
+The given sentence is "$sentence".
+
+relations: $rtl
+
+subject_types: $stl
+
+object_types: $otl
+
+In the given sentence, what triples might be contained? Please answer in the form (subject, relation, object):

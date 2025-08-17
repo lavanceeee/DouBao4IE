@@ -1,59 +1,88 @@
 <template>
   <div class="selector">
     <div class="radio-language">
-      <input type="radio" id="en" value="English" v-model="selectedLanguage" />
+      <input type="radio" id="en" value="eng" v-model="selectedPattern.selectedLanguage" />
       <label for="en">English</label>
 
-      <input type="radio" id="ch" value="Chinese" v-model="selectedLanguage" />
-      <label for="ch">中文</label>
+      <input type="radio" id="ch" value="chi" v-model="selectedPattern.selectedLanguage" />
+      <label for="ch">Chinese</label>
     </div>
 
     <div class="radio-model">
-      <input type="radio" id="RE" value="RE" v-model="selectedModel" />
+      <input type="radio" id="RE" value="RE" v-model="selectedPattern.selectedModel" />
       <label for="RE">RE</label>
 
-      <input type="radio" id="NER" value="NER" v-model="selectedModel" />
+      <input type="radio" id="NER" value="NER" v-model="selectedPattern.selectedModel" />
       <label for="RE">NER</label>
 
-      <input type="radio" id="EE" value="EE" v-model="selectedModel" />
+      <input type="radio" id="EE" value="EE" v-model="selectedPattern.selectedModel" />
       <label for="RE">EE</label>
     </div>
   </div>
 
   <div class="content-container">
-    <input type="text" placeholder="sentence" v-model="sentence" />
+    <input type="text" placeholder="sentence" v-model="usersInputForm.sentence" />
+
     <input
       type="text"
       placeholder="relation type list (rtl)*"
-      v-model="rtl_input"
+      v-model="usersInputForm.rtl"
     />
     <input
       type="text"
       placeholder="subject type list (stl)*"
-      v-model="stl_input"
+      v-model="usersInputForm.stl"
     />
     <input
       type="text"
       placeholder="object type list (otl)*"
-      v-model="otl_input"
+      v-model="usersInputForm.otl"
     />
-    <input type="text" placeholder="OpenAI key" v-model="userskey" />
+    <input type="text" placeholder="OpenAI key" v-model="usersInputForm.usersKey" />
   </div>
 
   <div class="btn-container">
-    <button>Generate</button>
+    <button @click="submmitInput">Generate</button>
     <button>Clear</button>
   </div>
 </template>
 
 <script setup>
-import {ref} from 'vue';
-const selectedLanguage = ref("English");
-const selectedModel = ref("RE");
+import {ref, reactive} from 'vue';
+import { getUsersForm } from '../composables/useData';
 
-const rtl_input = ref("");
-const stl_input = ref("");
-const otl_input = ref("");
+const selectedPattern = reactive({
+    selectedLanguage: "eng",
+    selectedModel: "RE"
+})
+
+const usersInputForm = reactive({
+    sentence: "",
+    rtl: "",
+    stl: "",
+    otl: "",
+    usersKey: ""
+})
+
+const submmitInput = () => {
+    if (!usersInputForm.sentence) {
+        alert("Please input the sentence firstly!");
+        return;
+    }
+
+    //submmit users input
+    getUsersForm(selectedPattern, usersInputForm);
+
+
+
+
+
+
+}
+
+
+
+
 </script>
 
 <style scoped>
