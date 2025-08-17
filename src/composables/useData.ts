@@ -11,10 +11,15 @@ interface usersInputForm {
     rtl?: string
     stl?: string
     otl?: string
+    etl?: string
     usersKey?: string
 }
 
 export async function getUsersForm(selectedPattern: selectedPattern, usersInputForm:usersInputForm) {
+    
+    //加载可视化
+    document.body.style.cursor = 'wait';
+
     const {selectedLanguage: language, selectedModel: model} = selectedPattern;
 
     const file = `prompts/${model}-${language}.prompt`;
@@ -39,13 +44,9 @@ export async function getUsersForm(selectedPattern: selectedPattern, usersInputF
             }   
         }
 
+        console.log(prompt);
+
         const usersKey = usersInputForm.usersKey;
-        console.log(usersKey);
-        getResponse(prompt, usersKey);
+        return getResponse(prompt, usersKey);
     }
-
-
-
-
-
 }

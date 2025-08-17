@@ -1,5 +1,5 @@
 <script setup>
-import { reactive, watch } from "vue";
+import { ref, reactive, watch, computed } from "vue";
 import { getUsersForm } from "../composables/useData";
 
 const selectedPattern = reactive({
@@ -32,17 +32,28 @@ watch(
   { immediate: true }
 );
 
-const submmitInput = () => {
+//将要渲染的pattern
+const patternOnBottom = computed(() => {
+  return Object.entries(usersInputForm)
+    .filter(([key, value]) => value !== "" && key !== "sentence" && key !== "usersKey")
+    .map(([key, value]) => `${key}: ${value}`)
+    .join("</br>");
+});
+
+const result = ref("");
+
+const submmitInput = async() => {
   if (!usersInputForm.sentence) {
     alert("Please input the sentence firstly!");
     return;
   }
 
-  //submmit users input
-  getUsersForm(selectedPattern, usersInputForm);
+  //submmit users input 
+  //坑：不能直接覆盖ref对象, 且函数是异步的
+   result.value = await getUsersForm(selectedPattern, usersInputForm);
 };
-</script>
 
+</script>
 
 <template>
   <div class="selector">
@@ -135,9 +146,15 @@ const submmitInput = () => {
     <button @click="submmitInput">Generate</button>
     <button>Clear</button>
   </div>
+
+  <div class="result-container">
+    <h3 style="margin-top:0">Result:</h3>
+    <p> sentence: {{ usersInputForm.sentence || "null"}}</p>
+    <p> pattern: {{ patternOnBottom || "null"}}</p>
+    <p>result: {{ result || "null" }}</p>
+  </div>
+  
 </template>
-
-
 
 <style scoped>
 .selector {
@@ -184,5 +201,14 @@ const submmitInput = () => {
 .btn-container button:hover {
   background-color: rgb(55, 55, 55);
   cursor: pointer;
+}
+
+.result-container {
+  margin: 20px auto;
+  border: 1px, solid black;
+  border-radius: 5px;
+  width: 35rem;
+  /* height: 8rem; */
+  padding: 20px;
 }
 </style>
