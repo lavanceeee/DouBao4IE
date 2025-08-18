@@ -5,7 +5,7 @@ import axios from "axios";
 const DEFAULT_APIKey = "1e7831be-0b31-4f62-94b0-e3202bcef1c9";
 const BASE_URL = "https://ark.cn-beijing.volces.com/api/v3/chat/completions";
 
-export async function getResponse(prompt: string, usersKey?: string) {
+export async function getResponse(prompt: string, usersKey?: string):Promise<string> {
     const apiKey = usersKey || DEFAULT_APIKey;
 
     try {

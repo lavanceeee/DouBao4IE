@@ -1,5 +1,6 @@
 import axios from "axios";
 import { getResponse } from "./api";
+import { reg } from "../utils/regs";
 
 interface selectedPattern {
     selectedLanguage: string
@@ -44,9 +45,11 @@ export async function getUsersForm(selectedPattern: selectedPattern, usersInputF
             }   
         }
 
-        console.log(prompt);
-
         const usersKey = usersInputForm.usersKey;
-        return getResponse(prompt, usersKey);
+        const text = await getResponse(prompt, usersKey);
+        
+        //正则化
+        const update = reg(text);
+        return update;
     }
 }

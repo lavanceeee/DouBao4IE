@@ -15,42 +15,69 @@ const usersInputForm = reactive({
   otl: "",
 });
 
+//提取结果
+const result = ref([]);
+
+//清空功能，放在watch前面初始化
+const clearInput = () => {
+  Object.keys(usersInputForm)
+  .filter((key) => key !== "usersKey")
+  .forEach((key) => {
+    usersInputForm[key] = "";
+  });
+
+  //清空结果
+  result.value = [];
+};
+
 watch(
   () => selectedPattern.selectedModel,
   (newPattern) => {
     if (newPattern === "RE") {
+      (usersInputForm.sentence = ""),
       (usersInputForm.rtl = ""),
-        (usersInputForm.stl = ""),
-        (usersInputForm.otl = ""),
-        delete usersInputForm.etl;
+      (usersInputForm.stl = ""),
+      (usersInputForm.otl = ""),
+      delete usersInputForm.etl;
+      //清空result
+      result.value = [];
     } else {
-      (usersInputForm.etl = ""), delete usersInputForm.rtl;
+      (usersInputForm.sentence = ""),
+      (usersInputForm.etl = ""),
+      delete usersInputForm.rtl;
       delete usersInputForm.stl;
       delete usersInputForm.otl;
+      result.value = [];
     }
   },
   { immediate: true }
 );
 
+//监控中英文的变化
+watch(
+  () => selectedPattern.selectedLanguage,
+  () => clearInput(),
+  { immediate: true } 
+);
+
 //将要渲染的pattern
 const patternOnBottom = computed(() => {
   return Object.entries(usersInputForm)
-    .filter(([key, value]) => value !== "" && key !== "sentence" && key !== "usersKey")
-    .map(([key, value]) => `${key}: ${value}`)
-    .join("</br>");
+    .filter(
+      ([key, value]) => value !== "" && key !== "sentence" && key !== "usersKey"
+    )
+    .map(([key, value]) => `${key}: ${value}`);
 });
 
-const result = ref("");
-
-const submmitInput = async() => {
-  if (!usersInputForm.sentence) {
-    alert("Please input the sentence firstly!");
+const submmitInput = async () => {
+  if (!usersInputForm.sentence || !usersInputForm.usersKey) {
+    alert("sentence and your API key is required");
     return;
   }
 
-  //submmit users input 
+  //submmit users input
   //坑：不能直接覆盖ref对象, 且函数是异步的
-   result.value = await getUsersForm(selectedPattern, usersInputForm);
+  result.value = await getUsersForm(selectedPattern, usersInputForm);
 };
 
 </script>
@@ -137,23 +164,31 @@ const submmitInput = async() => {
 
     <input
       type="text"
-      placeholder="OpenAI key"
+      placeholder="DouBao API key"
       v-model="usersInputForm.usersKey"
     />
   </div>
 
   <div class="btn-container">
     <button @click="submmitInput">Generate</button>
-    <button>Clear</button>
+    <button @click="clearInput">Clear</button>
   </div>
 
-  <div class="result-container">
-    <h3 style="margin-top:0">Result:</h3>
-    <p> sentence: {{ usersInputForm.sentence || "null"}}</p>
-    <p> pattern: {{ patternOnBottom || "null"}}</p>
-    <p>result: {{ result || "null" }}</p>
+  <div class="result-container" v-show="result.length">
+    <h3 style="margin-top: 0">Result:</h3>
+    <p>sentence:</p>
+    <ul>
+      <li>{{ usersInputForm.sentence }}</li>
+    </ul>
+    <p>pattern:</p>
+    <ul>
+      <li v-for="(line, index) in patternOnBottom" :key="index">{{ line }}</li>
+    </ul>
+    <p>result:</p>
+    <ul>
+      <li v-for="(line, index) in result" :key="index"> {{ line }}</li>
+    </ul>
   </div>
-  
 </template>
 
 <style scoped>
