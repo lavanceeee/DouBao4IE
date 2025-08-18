@@ -1,10 +1,10 @@
 <template>
   <div class="top-container">
     <div class="title-container">
-      <div class="title">DouBao4IE</div>
+      <div class="title">GPT4IE</div>
 
       <div class="title_mark">
-        frok of <a href="https://github.com/cocacola-lab/GPT4IE">GPT4IE</a>
+        frok from <a href="https://github.com/cocacola-lab/GPT4IE">cocacola-lab</a>
       </div>
     </div>
 
